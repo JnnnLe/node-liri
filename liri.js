@@ -203,3 +203,14 @@ function getMovie(callbackFn) {
 }
 
 promptUser();
+
+
+
+/*
+
+TODO:
+callback to promptUser for getSong fn
+empty string case + error handling for getMovie fn
+Append errors to proper log
+
+*/
