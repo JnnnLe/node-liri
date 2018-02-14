@@ -57,4 +57,49 @@ function promptUser() {
   });
 }
 
+function getTweets(callbackfunction) {
+  var callback = callbackfunction;
+  inquirer.prompt([
+    {
+      type: 'input',
+      message: 'What is your Twitter handle?',
+      name: 'twitterHandle'
+    }
+  ]).then(function(res) {
+    console.log('Twitter:', keys.twitter)
+    var twitterHandle = res.twitterHandle;
+  
+    //user submitted a valid string
+    if (twitterHandle === '') {
+      twitterHandle = 'sgrstk';
+      var arr = twitterHandle.split(' ');
+      arr = arr.join('');
+      twitterHandle = arr;
+      console.log('THis is ARRR', arr);
+    }
+
+    var params = {screen_name: twitterHandle};
+    console.log('PARAMS', params);
+    client.get('statuses/user_timeline', params, function(error, tweets, response) {
+
+      if (!error) {
+         var count = 0;
+        //iterate up to 20 
+        tweets.forEach(function(item) {
+          if (count < 20) {
+            count++;
+            console.log('THE TWEET', item.text, '\nCreated at: ', item.created_at);
+          }
+        })
+      }
+      else {
+        //console.log("Twitter Error", error);
+        // fs append to log the error  
+        console.log("uh-oh something isn't right!")
+      }
+      callback();
+    }); 
+  });
+}
+
 promptUser();
