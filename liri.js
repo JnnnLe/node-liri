@@ -50,7 +50,7 @@ function promptUser() {
     } else if (userInput === 'spotify-this-song') {
       getSong(promptUser);
     } else if (userInput === 'movie-this') {
-      //
+      getMovie(promptUser);
     } else if (userInput === 'do-what-it-says') {
       //
     }
@@ -88,14 +88,18 @@ function getTweets(callbackFn) {
         tweets.forEach(function(item) {
           if (count < 20) {
             count++;
+            console.log("################################################");
             console.log('THE TWEET', item.text, '\nCreated at: ', item.created_at);
+            console.log("################################################");
           }
         })
       }
       else {
         //console.log("Twitter Error", error);
         // fs append to log the error  
-        console.log("Uh-oh something isn't right!")
+        console.log("################################################");
+        console.log("Uh-oh something isn't right!");
+        console.log("################################################");
       }
       callback();
     }); 
@@ -103,8 +107,7 @@ function getTweets(callbackFn) {
 }
 
 function getSong(callbackFn) {
-var callback = callbackFn;
-
+  var callback = callbackFn;
   inquirer.prompt([
     {
       type: 'input',
@@ -123,6 +126,7 @@ var callback = callbackFn;
     spotify
       .search({ type: 'track', query: songName, limit: 1 })
       .then(function(res) {
+
         console.log("################################################");
         console.log('Spotify artist name: ', res.tracks.items[0].artists[0].name);
         console.log('Spotify song name: ', res.tracks.items[0].name);
@@ -135,11 +139,67 @@ var callback = callbackFn;
       .catch(function(err) {
         console.log('Sorry that was not a valid song, please try again.');
         // callback();
-
       });
-
     }
   });
+}
+
+function getMovie(callbackFn) {
+  var callback = callbackFn;
+  inquirer.prompt([
+    {
+      type: 'input',
+      message: 'Inquire about your favorite movie.',
+      name: 'moviePick'
+    }
+  ]).then(function(res) {
+    var moviePick = res.moviePick;
+    var queryURL = 'https://www.omdbapi.com/?t=' + moviePick + '&apikey=' + keys.omdb.id
+    request(queryURL, function(err, res, body){
+
+      var parseBody = JSON.parse(body);
+      console.log("################################################");
+      console.log('OMDB Title: ', parseBody.Title);
+      console.log('OMDB Release Year: ', parseBody.Year);
+      console.log('OMDB Rating: ', parseBody.Ratings[0].Value);
+      console.log('Rotten Tomatoes Rating: ', parseBody.Ratings[1].Value);
+      console.log('Country where the movie was produced: ', parseBody.Country);
+      console.log('Language of movie: ', parseBody.Language);
+      console.log('OMDB Plot: ', parseBody.Plot);
+      console.log('OMDB Actors: ', parseBody.Actors);
+      console.log("################################################");
+    });
+  })
+  
+    //user submitted a valid string
+    // if (twitterHandle === '') {
+    //   twitterHandle = 'sgrstk';
+    //   var arr = twitterHandle.split(' ');
+    //   arr = arr.join('');
+    //   twitterHandle = arr;
+    //   console.log('This is array', arr);
+    // }
+
+    // var params = {screen_name: twitterHandle};
+    // console.log('PARAMS', params);
+    // client.get('statuses/user_timeline', params, function(error, tweets, response) {
+
+    //   if (!error) {
+    //      var count = 0;
+    //     //iterate up to 20 
+    //     tweets.forEach(function(item) {
+    //       if (count < 20) {
+    //         count++;
+    //         console.log('THE TWEET', item.text, '\nCreated at: ', item.created_at);
+    //       }
+    //     })
+    //   }
+    //   else {
+    //     //console.log("Twitter Error", error);
+    //     // fs append to log the error  
+    //     console.log("Uh-oh something isn't right!")
+    //   }
+    //   callback();
 }
 
 promptUser();
