@@ -19,7 +19,7 @@ var client  = new Twitter(keys.twitter);
 // console.log('Spotify:', keys.spotify);
 // console.log('Twitter:', keys.twitter);
 // console.log('OMDB:', keys.omdb);
-
+var songName = "";
 
 /* 
   High level: 
@@ -71,11 +71,12 @@ function getTweets(callbackFn) {
   
     //user submitted a valid string
     if (twitterHandle === '') {
-      twitterHandle = 'sgrstk';
+      console.log('It looks like you did not enter a correct handle, here is our 44th president Twitter @BarackObama')
+      twitterHandle = 'BarackObama';
       var arr = twitterHandle.split(' ');
       arr = arr.join('');
       twitterHandle = arr;
-      console.log('This is array', arr);
+      // console.log('This is array', arr);
     }
 
     var params = {screen_name: twitterHandle};
@@ -89,7 +90,9 @@ function getTweets(callbackFn) {
           if (count < 20) {
             count++;
             console.log("################################################");
+            console.log('                                                ');
             console.log('THE TWEET', item.text, '\nCreated at: ', item.created_at);
+            console.log('                                                ');
             console.log("################################################");
           }
         })
@@ -98,7 +101,9 @@ function getTweets(callbackFn) {
         //console.log("Twitter Error", error);
         // fs append to log the error  
         console.log("################################################");
+        console.log('                                                ');
         console.log("Uh-oh something isn't right!");
+        console.log('                                                ');        
         console.log("################################################");
       }
       callback();
@@ -116,7 +121,7 @@ function getSong(callbackFn) {
     }
   ]).then(function(res) {
     // console.log("Spotify key: ", keys.spotify);
-    var songName = res.songName;
+    songName = res.songName;
   
     //user submitted a valid string
     if (songName === '' || songName === ' ') {
@@ -127,18 +132,20 @@ function getSong(callbackFn) {
       .search({ type: 'track', query: songName, limit: 1 })
       .then(function(res) {
 
-        console.log("################################################");
+        console.log('################################################');
+        console.log('                                                ');
         console.log('Spotify artist name: ', res.tracks.items[0].artists[0].name);
         console.log('Spotify song name: ', res.tracks.items[0].name);
         console.log('Spotify preview link: ', res.tracks.items[0].external_urls.spotify);        
         console.log('Spotify album name: ', res.tracks.items[0].album.name);
+        console.log('                                                ');        
         console.log("################################################");
-        // callback();
+        callback();
 
       })
       .catch(function(err) {
         console.log('Sorry that was not a valid song, please try again.');
-        // callback();
+        callback();
       });
     }
   });
@@ -159,52 +166,23 @@ function getMovie(callbackFn) {
 
       var parseBody = JSON.parse(body);
       console.log("################################################");
-      console.log('OMDB Title: ', parseBody.Title);
-      console.log('OMDB Release Year: ', parseBody.Year);
-      console.log('OMDB Rating: ', parseBody.Ratings[0].Value);
+      console.log('                                                ');
+      console.log('Movie Title: ', parseBody.Title);
+      console.log('Release Year: ', parseBody.Year);
+      console.log('IMDB Rating: ', parseBody.Ratings[0].Value);
       console.log('Rotten Tomatoes Rating: ', parseBody.Ratings[1].Value);
-      console.log('Country where the movie was produced: ', parseBody.Country);
-      console.log('Language of movie: ', parseBody.Language);
-      console.log('OMDB Plot: ', parseBody.Plot);
-      console.log('OMDB Actors: ', parseBody.Actors);
+      console.log('Country Produced: ', parseBody.Country);
+      console.log('Language: ', parseBody.Language);
+      console.log('Movie Plot: ', parseBody.Plot);
+      console.log('Movie Actors: ', parseBody.Actors);
+      console.log('                                                ');
       console.log("################################################");
+      callback();
     });
   })
-  
-    //user submitted a valid string
-    // if (twitterHandle === '') {
-    //   twitterHandle = 'sgrstk';
-    //   var arr = twitterHandle.split(' ');
-    //   arr = arr.join('');
-    //   twitterHandle = arr;
-    //   console.log('This is array', arr);
-    // }
-
-    // var params = {screen_name: twitterHandle};
-    // console.log('PARAMS', params);
-    // client.get('statuses/user_timeline', params, function(error, tweets, response) {
-
-    //   if (!error) {
-    //      var count = 0;
-    //     //iterate up to 20 
-    //     tweets.forEach(function(item) {
-    //       if (count < 20) {
-    //         count++;
-    //         console.log('THE TWEET', item.text, '\nCreated at: ', item.created_at);
-    //       }
-    //     })
-    //   }
-    //   else {
-    //     //console.log("Twitter Error", error);
-    //     // fs append to log the error  
-    //     console.log("Uh-oh something isn't right!")
-    //   }
-    //   callback();
 }
 
 promptUser();
-
-
 
 /*
 
