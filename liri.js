@@ -38,7 +38,7 @@ function promptUser() {
     {
       type: 'list',
       message: 'Choose a LIRI command.',
-      choices: ['my-tweets','spotify-this-song', 'movie-this', 'do-what-it-says'],
+      choices: ['my-tweets','spotify-this-song', 'movie-this', 'do-what-i-say'],
       name: 'userCommand'
     }
 
@@ -51,8 +51,8 @@ function promptUser() {
       getSong(promptUser);
     } else if (userInput === 'movie-this') {
       getMovie(promptUser);
-    } else if (userInput === 'do-what-it-says') {
-      //
+    } else if (userInput === 'do-what-i-say') {
+      dwis(promptUser);
     }
   });
 }
@@ -62,7 +62,7 @@ function getTweets(callbackFn) {
   inquirer.prompt([
     {
       type: 'input',
-      message: 'What is your Twitter handle?',
+      message: 'What is the Twitter handle?',
       name: 'twitterHandle'
     }
   ]).then(function(res) {
@@ -106,7 +106,7 @@ function getTweets(callbackFn) {
         console.log('                                                ');        
         console.log("################################################");
       }
-      callback();
+        callback();
     }); 
   });
 }
@@ -182,12 +182,34 @@ function getMovie(callbackFn) {
   })
 }
 
+function dwis(callbackFn) {
+  var callback = callbackFn;
+
+  inquirer.prompt([
+    {
+      type: 'list',
+      message: 'What are you in the mood for?',
+      choices: ['Look @ someone\'s Twitter', 'I have a song I want to play.', 'I am in the mood for a good movie.'],
+      name: 'userChoice'
+    }
+  ]).then(function(res) {
+    if (res.userChoice === 'Look @ someone\'s Twitter') {
+      getTweets(callbackFn);
+    } else if (res.userChoice ===  'I have a song I want to play.') {
+      getSong(callbackFn);
+    } else if (res.userChoice === 'I am in the mood for a good movie.') {
+      getMovie(callbackFn);
+
+    }
+  })
+}
+
+// jump start the game //
 promptUser();
 
 /*
 
 TODO:
-callback to promptUser for getSong fn
 empty string case + error handling for getMovie fn
 Append errors to proper log
 
